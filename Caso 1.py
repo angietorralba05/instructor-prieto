@@ -4,7 +4,7 @@ def get_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="tu_password",  # Cambia esto
+        password="",
         database="ejercicios_sena"
     )
 
@@ -92,4 +92,4 @@ cursor.execute("""
 conn.commit()
 cursor.close()
 conn.close()
-print("\n✅ Datos guardados en la base de datos.")
+print("\nDatos guardados en la base de datos.")

@@ -4,7 +4,7 @@ def get_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="tu_password",  # Cambia esto
+        password="",
         database="ejercicios_sena"
     )
 
@@ -87,7 +87,7 @@ if dia >= 1 and dia <= maxDias and maxDias > 0:
     conn.commit()
     cursor.close()
     conn.close()
-    print("\n✅ Evento guardado en la base de datos.")
+    print("\nEvento guardado en la base de datos.")
 
 else:
     print("Fecha Incorrecta. Favor verificar e intentar de nuevo.")
@@ -101,4 +101,4 @@ else:
     conn.commit()
     cursor.close()
     conn.close()
-    print("✅ Registro guardado en la base de datos.")
+    print("Registro guardado en la base de datos.")
