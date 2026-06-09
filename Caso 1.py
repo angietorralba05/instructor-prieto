@@ -1,4 +1,36 @@
-# caso 1
+import mysql.connector
+
+def get_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="tu_password",  # Cambia esto
+        database="ejercicios_sena"
+    )
+
+def init_tabla():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS empleados (
+            id                 INT AUTO_INCREMENT PRIMARY KEY,
+            nombre             VARCHAR(100),
+            categoria          VARCHAR(20),
+            antiguedad         INT,
+            sueldo_basico      INT,
+            monto_antiguedad   INT,
+            sueldo_total       INT,
+            porcentaje_aumento INT,
+            fecha              TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+init_tabla()
+
+# ── Programa ──────────────────────────────────────────────────────────────
 
 apellidoNombre = input("Ingrese apellido y nombre: ")
 categoria = input("Ingrese categoria (Junior / Semi Senior / Senior): ")
@@ -48,3 +80,16 @@ print(f"SUELDO TOTAL: $ {sueldoTotal}")
 print("OBSERVACIONES:")
 print(f"EL EMPLEADO GANA: {basico} SUELDO BÁSICO Y ${montoAntiguedad} DE ANTIGÜEDAD, {comparacion}")
 print(f"EL PORCENTAJE DE AUMENTO ES: {porcentajeAumento}%")
+
+# ── Guardar en BD ─────────────────────────────────────────────────────────
+conn = get_connection()
+cursor = conn.cursor()
+cursor.execute("""
+    INSERT INTO empleados
+        (nombre, categoria, antiguedad, sueldo_basico, monto_antiguedad, sueldo_total, porcentaje_aumento)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+""", (apellidoNombre, categoria, antiguedad, basico, montoAntiguedad, sueldoTotal, porcentajeAumento))
+conn.commit()
+cursor.close()
+conn.close()
+print("\n✅ Datos guardados en la base de datos.")

@@ -1,4 +1,35 @@
-# Caso 2
+import mysql.connector
+
+def get_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="tu_password",  # Cambia esto
+        database="ejercicios_sena"
+    )
+
+def init_tabla():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS eventos (
+            id            INT AUTO_INCREMENT PRIMARY KEY,
+            dia           INT,
+            mes           INT,
+            anio          INT,
+            nombre_evento VARCHAR(200),
+            horario       VARCHAR(50),
+            estado        VARCHAR(20),
+            fecha         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+init_tabla()
+
+# ── Programa ──────────────────────────────────────────────────────────────
 
 dia = int(input("Ingrese el dia: "))
 
@@ -40,10 +71,34 @@ if dia >= 1 and dia <= maxDias and maxDias > 0:
     else:
         periodo = "PM"
 
-    
     print("Fecha Correcta.")
     print(f"Fecha: {dia}/{nombreMes}/{anio}")
     print(f"Nombre: {nombreEvento}")
     print(f"Horario: {horaInicio}:{minutoInicio} / {horaFin}:{minutoFin} {periodo}")
+
+    horario = f"{horaInicio}:{minutoInicio:02d} / {horaFin}:{minutoFin:02d} {periodo}"
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO eventos (dia, mes, anio, nombre_evento, horario, estado)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (dia, mes, anio, nombreEvento, horario, "Correcta"))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("\n✅ Evento guardado en la base de datos.")
+
 else:
     print("Fecha Incorrecta. Favor verificar e intentar de nuevo.")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO eventos (dia, mes, anio, estado) VALUES (%s, %s, %s, %s)",
+        (dia, mes, anio, "Incorrecta")
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("✅ Registro guardado en la base de datos.")
