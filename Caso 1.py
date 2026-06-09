@@ -33,7 +33,7 @@ init_tabla()
 # ── Programa ──────────────────────────────────────────────────────────────
 
 apellidoNombre = input("Ingrese apellido y nombre: ")
-categoria = input("Ingrese categoria (Junior / Semi Senior / Senior): ")
+categoria = input("Ingrese categoria (Junior / Semi Senior / Senior): ").strip().title()
 antiguedad = int(input("Ingrese antiguedad en anios: "))
 
 
